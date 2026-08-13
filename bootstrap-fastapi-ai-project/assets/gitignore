@@ -1,0 +1,24 @@
+# Python bytecode / cache
+__pycache__/
+*.pyc
+
+# tool caches
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+
+# virtual environment
+.venv/
+
+# env / secrets
+.env
+.env.local
+
+# packaging artifacts
+*.egg-info/
+dist/
+build/
+
+# editor — keep settings.json committed, ignore the rest
+.vscode/*
+!.vscode/settings.json
