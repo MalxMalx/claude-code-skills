@@ -52,8 +52,9 @@ This skill assumes `uv` and `git` are installed on the machine. If either is mis
    uv run pytest
    uv run ruff check .
    uv run mypy .
+   uv run pre-commit run --all-files
    ```
-   All three should pass cleanly on the freshly generated code. If `mypy --strict` complains about anything in the generated `app/main.py`/`tests/test_health.py`, fix the template files in this skill's `assets/` directory too, so the issue doesn't recur next time the skill runs.
+   All four should pass cleanly on the freshly generated code. Do not skip the `pre-commit run` line: the hooks are a separate execution path from `uv run mypy .`, and an earlier version of this skill shipped a config where the first three passed but the user's very first `git commit` failed. If `mypy --strict` complains about anything in the generated `app/main.py`/`tests/test_health.py`, fix the template files in this skill's `assets/` directory too, so the issue doesn't recur next time the skill runs.
 
 7. **Report back concisely**: project path, confirmation that health check + test pass, and remind the user to select the `.venv` interpreter in VS Code (Cmd/Ctrl+Shift+P → "Python: Select Interpreter") so Pylance picks up strict type checking. Run the server with `uv run uvicorn app.main:app --reload`.
 

@@ -48,3 +48,10 @@ bootstrap-fastapi-ai-project/
   - `uv init` now passes `--app --no-package`. As of uv 0.12 a bare `uv init` defaults to a
     packaged `src/` layout with a `[build-system]`, which is not the shape this skill wants.
   - `assets/gitignore` ignores `.venv/`, which it previously did not.
+  - `assets/pre-commit-config.yaml` runs ruff and mypy from the project's uv venv via
+    `repo: local` + `language: system`, instead of pre-commit's isolated envs. The isolated
+    mypy env lacked `fastapi`, and mirrors-mypy defaults to `--ignore-missing-imports`, so
+    `FastAPI` degraded to `Any` and strict mode rejected the route decorator — every first
+    `git commit` failed even though `uv run mypy .` passed.
+  - Verification step now includes `uv run pre-commit run --all-files`, which is how the
+    above escaped notice.

@@ -1,12 +1,35 @@
+# Hooks run the tools from the project's own uv venv (language: system) rather than
+# from pre-commit's isolated envs. This guarantees the hooks check exactly what
+# `uv run ruff` / `uv run mypy` check locally.
+#
+# The isolated-env alternative (astral-sh/ruff-pre-commit + mirrors-mypy) requires
+# restating every runtime dependency under `additional_dependencies`, and mirrors-mypy
+# defaults to `--ignore-missing-imports`, so anything omitted silently degrades to Any.
+# Under `strict = true` that surfaces as confusing errors like
+# "Untyped decorator makes function ... untyped" on a correctly-typed FastAPI route.
 repos:
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.4
+  - repo: local
     hooks:
-      - id: ruff
-        args: [--fix]
+      - id: ruff-check
+        name: ruff (lint)
+        entry: uv run ruff check --fix --force-exclude
+        language: system
+        types_or: [python, pyi]
+        require_serial: true
+
       - id: ruff-format
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.14.0
-    hooks:
+        name: ruff (format)
+        entry: uv run ruff format --force-exclude
+        language: system
+        types_or: [python, pyi]
+        require_serial: true
+
       - id: mypy
-        additional_dependencies: [pydantic, pydantic-settings]
+        name: mypy (strict)
+        # Whole-project check, matching `uv run mypy .`; per-file invocation gives
+        # different results under strict mode depending on which files are staged.
+        entry: uv run mypy .
+        language: system
+        types_or: [python, pyi]
+        pass_filenames: false
+        require_serial: true
