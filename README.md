@@ -11,7 +11,7 @@ files on each machine. This repo is what keeps machines in sync.
 `~/.claude/skills` must not already exist (or must be empty):
 
 ```bash
-git clone git@github.com:MalxMalx/claude-skills.git ~/.claude/skills
+git clone git@github.com:MalxMalx/claude-code-skills.git ~/.claude/skills
 ```
 
 Then restart Claude Code / Claude Desktop so it rescans for skills.
